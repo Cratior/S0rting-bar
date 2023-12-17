@@ -1,0 +1,147 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#heightSlider {
+    margin-left: 10px;
+    appearance: none;
+    /* Disable default styling */
+    height: 400px;
+    /* Adjust the height as needed */
+    width: 20px;
+    /* Set the width of the slider */
+    background-color: #ccc;
+    /* Set the background color */
+    border-radius: 5px;
+    /* Add border-radius for rounded corners */
+}
+
+#barhightdiv {
+    margin-top: 50px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: flex-end;
+    justify-content: flex-end;
+    align-items: baseline;
+}
+
+#bars-container {
+    display: flex;
+    margin-top: auto;
+    width: 1106px;
+    align-items: flex-end;
+    margin-right: 14px;
+}
+
+.bar {
+    flex: 1;
+    margin: 0 0px;
+    background-color: #3498db;
+    transition: height 0.2s, background-color 0.2s;
+}
+
+#controls {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+    width: 782px;
+    background-color: #f0f0f0;
+    padding: 19px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-content: center;
+}
+
+.slider-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+button#startButton {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+button#stopButton {
+    background-color: #f44336;
+    color: #fff;
+}
+
+button#resetButton {
+    background-color: #3498db;
+    color: #fff;
+}
+
+#heightSlider {
+    margin-left: 10px;
+}
+
+#algorithm {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+#speedSlider {
+    width: 70px;
+    margin-right: -12px;
+}
+
+.additional-controls {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    max-width: 900px;
+    margin: 30px auto;
+    background-color: #f0f0f0;
+    padding: 19px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-content: center;
+    height: auto;
+    min-height: 90px;
+    max-height: 400px;
+    align-items: center;
+}
+
+.additional-control-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 9px 15px;
+}
+
+/* Style for algorithm parameter information */
+.algorithm-info {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555;
+}
