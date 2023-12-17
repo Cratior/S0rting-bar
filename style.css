@@ -117,7 +117,7 @@ button#resetButton {
     display: flex;
     justify-content: space-around;
     width: 100%;
-    max-width: 900px;
+    max-width: 1485px;
     margin: 30px auto;
     background-color: #f0f0f0;
     padding: 19px;
@@ -142,6 +142,6 @@ button#resetButton {
 /* Style for algorithm parameter information */
 .algorithm-info {
     margin-top: 10px;
-    font-size: 14px;
+    font-size: 12px;
     color: #555;
 }

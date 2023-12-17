@@ -46,6 +46,8 @@
                     <option value="comb">Comb Sort</option>
                     <option value="cycle">Cycle Sort</option>
                     <option value="pancake">Pancake Sort</option>
+                    <option value="cocktailShaker">Cocktail Shaker Sort</option>
+                    <option value="gnome">Gnome Sort</option>
                     <option value="manual">Manual</option>
                 </select>
             </div>
@@ -121,6 +123,29 @@
             <div class="additional-control-box">
                 <label>Manual Sort:</label>
                 <div class="algorithm-info">Sorting based on user interactions.</div>
+            </div>
+            <div class="additional-control-box">
+                <label>Comb Sort:</label>
+                <div class="algorithm-info">Improves on bubble sort, O(n^2) time complexity in the worst case.</div>
+            </div>
+        
+            <div class="additional-control-box">
+                <label>Cycle Sort:</label>
+                <div class="algorithm-info">In-place sorting with optimal number of memory writes, O(n^2) time complexity.</div>
+            </div>
+        
+            <div class="additional-control-box">
+                <label>Pancake Sort:</label>
+                <div class="algorithm-info">Sorting by prefix reversal, O(n^2) time complexity.</div>
+            </div>
+            <div class="additional-control-box">
+                <label>Cocktail Shaker Sort:</label>
+                <div class="algorithm-info">Variation of bubble sort moving bidirectionally, O(n^2) time complexity.</div>
+            </div>
+            
+            <div class="additional-control-box">
+                <label>Gnome Sort:</label>
+                <div class="algorithm-info">In-place sorting algorithm, O(n^2) time complexity in the worst case.</div>
             </div>
         </div>
 
@@ -227,6 +252,12 @@ let speed = 50; // Default speed value
                 break;
             case "pancake":
                 pancakeSort();
+                break;
+                case "cocktailShaker":
+                cocktailShakerSort();
+                break;
+            case "gnome":
+                gnomeSort();
                 break;
             // Add cases for additional sorting algorithms
             default:
