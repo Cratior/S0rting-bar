@@ -903,25 +903,37 @@
         }
 
         async function checkBars() {
-            const barsContainer = document.getElementById("bars-container");
-            const n = bars.length;
+    const barsContainer = document.getElementById("bars-container");
+    const n = bars.length;
 
-            for (let i = 0; i < n - 1; i++) {
-                if (bars[i] > bars[i + 1]) {
-                    // Highlight the problematic bar in red
-                    barsContainer.children[i].style.backgroundColor = "red";
-                    barsContainer.children[i + 1].style.backgroundColor = "red";
-                    return false;
-                }
-            }
+    for (let i = 0; i < n - 1; i++) {
+        // Highlight the current bar in red
+        barsContainer.children[i].style.backgroundColor = "red";
+        barsContainer.children[i + 1].style.backgroundColor = "red";
+        await delay(30); // Add a delay of 120ms
 
-            // Highlight all bars in green
-            for (let i = 0; i < n; i++) {
-                barsContainer.children[i].style.backgroundColor = "green";
-            }
-
-            return true;
+        // Check if the current bar is greater than the next one
+        if (bars[i] > bars[i + 1]) {
+            // If yes, return false
+            return false;
         }
+
+        // Otherwise, make the current bar and the next one green
+        barsContainer.children[i].style.backgroundColor = "green";
+    }
+
+    // Highlight the last bar in green
+    barsContainer.children[n - 1].style.backgroundColor = "green";
+
+    await delay(10); // Add a delay of 120ms
+    return true;
+}
+
+// Helper function to create a delay using Promises
+function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
         function resetHighlight() {
             const barsContainer = document.getElementById("bars-container");
