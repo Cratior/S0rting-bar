@@ -910,7 +910,7 @@
         // Highlight the current bar in red
         barsContainer.children[i].style.backgroundColor = "red";
         barsContainer.children[i + 1].style.backgroundColor = "red";
-        await delay(30); // Add a delay of 120ms
+        await delay(4); // Add a delay of 120ms
 
         // Check if the current bar is greater than the next one
         if (bars[i] > bars[i + 1]) {
@@ -925,7 +925,7 @@
     // Highlight the last bar in green
     barsContainer.children[n - 1].style.backgroundColor = "green";
 
-    await delay(10); // Add a delay of 120ms
+    await delay(2); // Add a delay of 120ms
     return true;
 }
 
