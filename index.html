@@ -185,7 +185,9 @@
         let selectedBars = []; // Add this line to define selectedBars
         let bars = [];
         let sorting = false;
+        let sortingInProgress = false; // Add this line to track sorting in progress
         let speed = 50; // Default speed value
+
         function generateBars(count, maxHeight, minHeight) {
             const barHeightIncrement = (maxHeight - minHeight) / count;
             bars = Array.from(
@@ -196,7 +198,6 @@
             renderBars();
         }
 
-
         function shuffle(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -204,6 +205,7 @@
             }
             return array;
         }
+
         function renderBars() {
             const barsContainer = document.getElementById("bars-container");
             barsContainer.innerHTML = "";
@@ -214,24 +216,30 @@
                 barsContainer.appendChild(bar);
             });
         }
+
         function updateBars() {
             const barCount = document.getElementById("barCount").value;
             const maxHeight = document.getElementById("heightSlider").value;
-            generateBars(barCount, maxHeight, 20);
+
+            if (!sorting) {
+                generateBars(barCount, maxHeight, 20);
+            }
         }
 
         function updateSpeed() {
             speed = document.getElementById("speedSlider").value;
         }
+
         function startSorting() {
             if (!sorting) {
                 const selectedAlgorithm = document.getElementById("algorithm").value;
-                sorting = true;
 
                 // Remove event listeners if manual sort mode is not selected
                 if (selectedAlgorithm !== "manual") {
                     removeBarEventListeners();
                 }
+
+                sorting = true;
 
                 switch (selectedAlgorithm) {
                     case "bubble":
@@ -268,18 +276,20 @@
                 }
             }
         }
-        function stopSorting() {
+
+        async function stopSorting() {
             sorting = false;
-            resetHighlight(); // Add this line to reset the highlighted bars
-        }
-        function resetHighlight() {
-            const barsContainer = document.getElementById("bars-container");
-            const n = bars.length;
-            for (let i = 0; i < n; i++) {
-                barsContainer.children[i].style.backgroundColor = "#3498db";
-            }
+            resetHighlight(); // Reset the highlighted bars
+            await delay(100); // Add a short delay to ensure sorting is stopped before resetting bars
         }
 
+        async function resetBars() {
+            await stopSorting(); // Stop sorting before resetting bars
+            const barCount = document.getElementById("barCount").value;
+            const maxHeight = document.getElementById("heightSlider").value;
+            generateBars(barCount, maxHeight, 20); // Adjust the minimum height as needed
+            resetHighlight();
+        }
         function resetBars() {
             stopSorting();
             const barCount = document.getElementById("barCount").value;
@@ -291,7 +301,9 @@
         function delay(ms) {
             return new Promise((resolve) => setTimeout(resolve, ms));
         }
+
         async function bubbleSort() {
+            sorting = true;
             for (let i = 0; i < bars.length - 1; i++) {
                 for (let j = 0; j < bars.length - i - 1; j++) {
                     if (!sorting) return;
@@ -304,9 +316,12 @@
                 }
             }
             checkBars();
+            sortingInProgress = false;
             sorting = false;
         }
+
         async function bogoSort() {
+            sorting = true;
             const isSorted = () => {
                 for (let i = 0; i < bars.length - 1; i++) {
                     if (bars[i] > bars[i + 1]) {
@@ -333,8 +348,10 @@
             }
 
             checkBars();
+            sortingInProgress = false;
             sorting = false;
         }
+
         function addBarEventListeners() {
             const barsContainer = document.getElementById("bars-container");
             const n = bars.length;
@@ -347,9 +364,6 @@
                 });
             }
         }
-
-
-
 
         function toggleManualSort() {
             // Enable manual sort mode
@@ -471,9 +485,8 @@
             }
         }
 
-
-
         async function selectionSort() {
+            sorting = true;
             const n = bars.length;
             for (let i = 0; i < n - 1; i++) {
                 let minIndex = i;
@@ -489,9 +502,12 @@
                 await delay(speed);
             }
             checkBars();
+            sortingInProgress = false;
             sorting = false;
         }
+
         async function insertionSort() {
+            sorting = true;
             const n = bars.length;
             for (let i = 1; i < n; i++) {
                 if (!sorting) return;
@@ -507,17 +523,31 @@
                 await delay(speed);
             }
             checkBars();
+            sortingInProgress = false;
             sorting = false;
         }
+
         async function mergeSort() {
+            sorting = true;
             if (bars.length <= 1) return bars;
 
-            const merge = async (left, right) => {
+            const merge = async (start, middle, end) => {
+                const left = bars.slice(start, middle + 1);
+                const right = bars.slice(middle + 1, end + 1);
                 let result = [];
                 let leftIndex = 0;
                 let rightIndex = 0;
+                let resultIndex = start;
+
+                // Highlight the bars that are being compared in red
+                for (let i = start; i <= end; i++) {
+                    highlightBars(i, null, "red");
+                }
+                await delay(speed);
 
                 while (leftIndex < left.length && rightIndex < right.length) {
+                    if (!sorting) return;
+
                     if (left[leftIndex] < right[rightIndex]) {
                         result.push(left[leftIndex]);
                         leftIndex++;
@@ -527,30 +557,53 @@
                     }
                 }
 
-                return result
-                    .concat(left.slice(leftIndex))
-                    .concat(right.slice(rightIndex));
+                while (leftIndex < left.length) {
+                    result.push(left[leftIndex]);
+                    leftIndex++;
+                }
+
+                while (rightIndex < right.length) {
+                    result.push(right[rightIndex]);
+                    rightIndex++;
+                }
+
+                // Update bars array with the merged result
+                for (let i = 0; i < result.length; i++) {
+                    bars[resultIndex] = result[i];
+                    resultIndex++;
+                }
+
+                renderBars();
+
+                // Reset the color to the default after the merge
+                for (let i = start; i <= end; i++) {
+                    highlightBars(i, null, "#3498db");
+                }
+
+                await delay(speed);
             };
 
-            const mergeSortRecursive = async (array) => {
-                if (array.length <= 1) return array;
+            const mergeSortRecursive = async (start, end) => {
+                if (start < end) {
+                    const middle = Math.floor((start + end) / 2);
 
-                const middle = Math.floor(array.length / 2);
-                const left = array.slice(0, middle);
-                const right = array.slice(middle);
+                    // Recursively sort the left and right halves
+                    await mergeSortRecursive(start, middle);
+                    await mergeSortRecursive(middle + 1, end);
 
-                const leftSorted = await mergeSortRecursive(left);
-                const rightSorted = await mergeSortRecursive(right);
-
-                return await merge(leftSorted, rightSorted);
+                    // Merge the sorted halves
+                    await merge(start, middle, end);
+                }
             };
 
-            const sortedArray = await mergeSortRecursive(bars);
-            bars = sortedArray;
-            renderBars();
+            await mergeSortRecursive(0, bars.length - 1);
+            checkBars();
+            sortingInProgress = false;
+            sorting = false;
         }
 
         async function quickSort() {
+            sorting = true;
             const partition = async (low, high) => {
                 const pivot = bars[high];
                 let i = low - 1;
@@ -586,10 +639,12 @@
 
             await quickSortRecursive(0, bars.length - 1);
             checkBars();
+            sortingInProgress = false;
             sorting = false;
         }
 
         async function heapSort() {
+            sorting = true;
             const heapify = async (n, i) => {
                 let largest = i;
                 const left = 2 * i + 1;
